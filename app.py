@@ -18,7 +18,7 @@ class DanskSkrivningApp:
     def __init__(self, root):
         self.root = root
         self.root.title("DU3 Skrivning - Practice")
-        self.root.geometry("900x1000")
+        self.root.geometry("1920x1080")
         self.root.minsize(700, 600)
         self.root.protocol("WM_DELETE_WINDOW", self.close_window)
 
@@ -42,9 +42,9 @@ class DanskSkrivningApp:
         style = ttk.Style()
         if "clam" in style.theme_names():
             style.theme_use("clam")
-        style.configure("Title.TLabel", font=("Malgun Gothic", 18, "bold"))
-        style.configure("Timer.TLabel", font=("Malgun Gothic", 22, "bold"))
-        style.configure("Section.TLabel", font=("Malgun Gothic", 11, "bold"))
+        style.configure("Title.TLabel", font=("Segoe UI", 20, "bold"))
+        style.configure("Timer.TLabel", font=("Segoe UI", 28, "bold"))
+        style.configure("Section.TLabel", font=("Segoe UI", 13, "bold"))
         self.style = style
         self.toolbar = ttk.Frame(self.root, padding=(12, 8))
         self.toolbar.pack(fill="x")
@@ -101,7 +101,7 @@ class DanskSkrivningApp:
         for widget in self.root.winfo_children():
             self.apply_widget_theme(widget, foreground, input_background)
 
-        if self.timer_label is not None:
+        if self.timer_label is not None and self.root.winfo_exists(self.timer_label):
             timer_is_red = self.timer_permanent_red and not self.timer_flash_after_id
             if self.timer_flash_after_id is not None:
                 timer_is_red = self.timer_flash_visible
@@ -187,7 +187,7 @@ class DanskSkrivningApp:
         ttk.Label(
             content,
             text="DU3 = complaint + email (min. 90 words)",
-            font=("Malgun Gothic", 11),
+            font=("Segoe UI", 13),
         ).pack(pady=(0, 30))
         ttk.Button(
             content,
@@ -272,14 +272,21 @@ class DanskSkrivningApp:
             content, text="Words: 0 / 90", foreground="#b42318"
         )
         self.email_count_label.grid(row=10, column=0, sticky="w", pady=(4, 10))
+        bottom_controls = ttk.Frame(content)
+        bottom_controls.grid(row=11, column=0, sticky="ew", pady=(4, 0))
+        bottom_controls.columnconfigure(0, weight=1)
+        bottom_controls.columnconfigure(1, weight=1)
         ttk.Button(
-            content,
+            bottom_controls,
+            text="Back",
+            command=self.confirm_back_to_menu,
+        ).grid(row=0, column=0, sticky="w")
+        ttk.Button(
+            bottom_controls,
             text="Finished",
             command=self.finish_attempt,
             style="Finished.TButton",
-        ).grid(
-            row=11, column=0, sticky="e", ipady=4
-        )
+        ).grid(row=0, column=1, sticky="e", ipady=4)
         self.apply_theme()
 
     def create_text_area(self, parent, height, row):
@@ -288,7 +295,7 @@ class DanskSkrivningApp:
             height=height,
             wrap="word",
             undo=True,
-            font=("Malgun Gothic", 11),
+            font=("Segoe UI", 13),
         )
         text_widget.grid(row=row, column=0, sticky="nsew")
         text_widget.bind("<<Modified>>", self.update_word_counts)
@@ -518,7 +525,7 @@ class DanskSkrivningApp:
         viewer = tk.Toplevel(self.root)
         viewer.title(os.path.basename(path))
         viewer.geometry("760x600")
-        text = tk.Text(viewer, wrap="word", padx=12, pady=12)
+        text = tk.Text(viewer, wrap="word", padx=12, pady=12, font=("Segoe UI", 13))
         text.pack(fill="both", expand=True)
         text.insert("1.0", content)
         text.configure(state="disabled")
@@ -526,6 +533,19 @@ class DanskSkrivningApp:
         text.bind("<Button-4>", self.scroll_text)
         text.bind("<Button-5>", self.scroll_text)
         self.apply_theme()
+
+    def confirm_back_to_menu(self):
+        if not self.active_attempt:
+            self.show_menu()
+            return
+
+        discard = messagebox.askyesno(
+            "Return to menu?",
+            "This attempt has not been saved. Return to the menu and discard it?",
+            parent=self.root,
+        )
+        if discard:
+            self.show_menu()
 
     def close_window(self):
         if self.active_attempt:
