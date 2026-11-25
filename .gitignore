@@ -1,3 +1,6 @@
+# Don't share other peoples writing attempts
+attempts
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
