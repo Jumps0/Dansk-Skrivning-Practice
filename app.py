@@ -57,6 +57,7 @@ class DanskSkrivningApp:
         for child in self.root.winfo_children():
             if child is not self.toolbar:
                 child.destroy()
+        self.timer_label = None
 
     def toggle_theme(self):
         self.dark_mode = not self.dark_mode
@@ -101,7 +102,7 @@ class DanskSkrivningApp:
         for widget in self.root.winfo_children():
             self.apply_widget_theme(widget, foreground, input_background)
 
-        if self.timer_label is not None and self.root.winfo_exists(self.timer_label):
+        if self.timer_label is not None and self.timer_label.winfo_exists():
             timer_is_red = self.timer_permanent_red and not self.timer_flash_after_id
             if self.timer_flash_after_id is not None:
                 timer_is_red = self.timer_flash_visible
