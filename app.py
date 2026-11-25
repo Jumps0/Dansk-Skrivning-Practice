@@ -439,7 +439,7 @@ class DanskSkrivningApp:
             "for the DU3 writing test. Comment on task completion, clarity, vocabulary, grammar, "
             "and sentence structure. Check whether the email contains at least 90 words. Give "
             "specific corrections and explain the most important improvements. Do not rewrite the "
-            "texts without explaining the changes.\n"
+            "texts without explaining the changes. Please reply in english.\n"
             "=== END GRADING PROMPT ===\n"
         )
         saved_path = os.path.join(ATTEMPTS_DIRECTORY, filename)
